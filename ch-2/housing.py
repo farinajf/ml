@@ -67,19 +67,44 @@ def split_train_set(data):
 ################################################################
 #                                                              #
 ################################################################
+def preprocess_data(data):
+    data["rooms_per_household"]      = data["total_rooms"]    / data["households"]
+    data["bedrooms_per_room"]        = data["total_bedrooms"] / data["total_rooms"]
+    data["population_per_household"] = data["population"]     / data["households"]
+    return data
+
+
+################################################################
+#                                                              #
+################################################################
 def plot_data(data):
-    housing.plot(kind="scatter",
-                 x="longitude",
-                 y="latitude",
-                 alpha=0.4,
-                 s=housing["population"]/100,  #radius represents the district's population
-                 label="population",
-                 figsize=(20,14),
-                 c="median_house_value",       #color represents the price
-                 cmap=plot.get_cmap("jet"),    #color map
-                 colorbar=True)
+    data.plot(kind="scatter",
+              x="longitude",
+              y="latitude",
+              alpha=0.4,
+              s=housing["population"]/100,  #radius represents the district's population
+              label="population",
+              figsize=(20,14),
+              c="median_house_value",       #color represents the price
+              cmap=plot.get_cmap("jet"),    #color map
+              colorbar=True)
     plot.legend()
     plot.show()
+
+
+################################################################
+#                                                              #
+################################################################
+def correlation_data(data, plotData=False):
+    y = data.corr()
+    print(y["median_house_value"].sort_values(ascending=False))
+
+    if plotData == True:
+        data.plot(kind="scatter",
+                  x="median_income",
+                  y="median_house_value",
+                alpha=0.1)
+        plot.show()
 
 
 ################################################################
@@ -90,6 +115,9 @@ def plot_data(data):
 housing = load_housing_data()
 #describe(housing)
 
+housing = preprocess_data(housing)
+
 #Stratified sampling based on the income category
 housing, housing_test = split_train_set(housing)
-plot_data(housing)
+#plot_data(housing)
+correlation_data(housing)
