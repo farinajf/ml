@@ -1,0 +1,7 @@
+name: ml
+dependencies:
+  - matplotlib
+  - numpy
+  - pandas
+  - scikit-learn
+  - scipy

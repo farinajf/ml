@@ -10,9 +10,14 @@ from sklearn.model_selection import train_test_split
 from sklearn.model_selection import StratifiedShuffleSplit
 
 DOWNLOAD_ROOT = "https://raw.githubusercontent.com/ageron/handson-ml2/master/"
-HOUSING_PATH  = os.path.join("datasets", "housing")
+HOUSING_PATH  = os.path.join("/home/fran/PythonProjects/ml/datasets", "housing")
 HOUSING_URL   = DOWNLOAD_ROOT + "datasets/housing/housing.tgz"
 
+################################################################
+# Descarga el dataset de housing y lo descomprime              #
+# housing_url: URL del dataset de housing                      #
+# housing_path: Ruta donde se guardará el dataset              #
+################################################################
 def fetch_housing_data(housing_url=HOUSING_URL, housing_path=HOUSING_PATH):
     os.makedirs(housing_path, exist_ok=True)
     tgz_path = os.path.join(housing_path, "housing.tgz")
@@ -24,11 +29,22 @@ def fetch_housing_data(housing_url=HOUSING_URL, housing_path=HOUSING_PATH):
     housing_tgz.close()
 
 
+################################################################
+# Carga el dataset de housing desde un archivo CSV             #
+# housing_path: Ruta donde se encuentra el dataset de housing  #
+# Returns: DataFrame con los datos del dataset de housing      #
+################################################################
 def load_housing_data(housing_path=HOUSING_PATH):
     csv_path = os.path.join(housing_path, "housing.csv")
     return pd.read_csv(csv_path)
 
 
+################################################################
+# Describe el dataset de housing, mostrando las primeras filas,#
+# información general, estadísticas descriptivas y conteo de   #
+# categorías en la columna "ocean_proximity"                   #
+# housing: DataFrame con los datos del dataset de housing      #
+################################################################
 def describe(data):
     print(data.head())
     print("---------------------------------------------")
@@ -38,7 +54,7 @@ def describe(data):
     print("---------------------------------------------")
     print(data["ocean_proximity"].value_counts())
 
-    housing.hist(bins=50, figsize=(20, 15))
+    data.hist(bins=50, figsize=(20, 15))
     plot.show()
 
 
@@ -56,7 +72,7 @@ def split_train_set(data):
     for train_index, test_index in split.split(data, data["income_cat"]):
         strat_train_set = data.loc[train_index]
         strat_test_set  = data.loc[test_index]
-    
+
     #Remove the income_cat attribute
     for set_ in (strat_train_set, strat_test_set):
         set_.drop("income_cat", axis=1, inplace=True)
@@ -120,4 +136,4 @@ housing = preprocess_data(housing)
 #Stratified sampling based on the income category
 housing, housing_test = split_train_set(housing)
 #plot_data(housing)
-correlation_data(housing)
+#correlation_data(housing)
