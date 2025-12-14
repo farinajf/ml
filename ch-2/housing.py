@@ -135,5 +135,5 @@ housing = preprocess_data(housing)
 
 #Stratified sampling based on the income category
 housing, housing_test = split_train_set(housing)
-#plot_data(housing)
+plot_data(housing)
 #correlation_data(housing)
